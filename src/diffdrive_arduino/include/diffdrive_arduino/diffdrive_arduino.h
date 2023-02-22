@@ -13,6 +13,7 @@
 
 #include "config.h"
 #include "wheel.h"
+#include "battery.h"
 #include "arduino_comms.h"
 
 
@@ -48,6 +49,7 @@ private:
 
   Wheel l_wheel_;
   Wheel r_wheel_;
+  Battery battery_;
 
   rclcpp::Logger logger_;
 

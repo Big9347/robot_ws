@@ -36,6 +36,7 @@ return_type DiffDriveArduino::configure(const hardware_interface::HardwareInfo &
   l_wheel_.setup(cfg_.left_wheel_name, cfg_.enc_counts_per_rev);
   r_wheel_.setup(cfg_.right_wheel_name, cfg_.enc_counts_per_rev);
 
+  battery_.setup("battery_state");
   // Set up the Arduino
   arduino_.setup(cfg_.device, cfg_.baud_rate, cfg_.timeout);  
 
@@ -55,7 +56,7 @@ std::vector<hardware_interface::StateInterface> DiffDriveArduino::export_state_i
   state_interfaces.emplace_back(hardware_interface::StateInterface(l_wheel_.name, hardware_interface::HW_IF_POSITION, &l_wheel_.pos));
   state_interfaces.emplace_back(hardware_interface::StateInterface(r_wheel_.name, hardware_interface::HW_IF_VELOCITY, &r_wheel_.vel));
   state_interfaces.emplace_back(hardware_interface::StateInterface(r_wheel_.name, hardware_interface::HW_IF_POSITION, &r_wheel_.pos));
-  state_interfaces.emplace_back(hardware_interface::StateInterface("battery_state", "voltage", &speed_scaling_combined_));
+  state_interfaces.emplace_back(hardware_interface::StateInterface(battery_.name, "voltage", &battery_.volt));
   return state_interfaces;
 }
 
@@ -120,7 +121,7 @@ hardware_interface::return_type DiffDriveArduino::read()
   pos_prev = r_wheel_.pos;
   r_wheel_.pos = r_wheel_.calcEncAngle();
   r_wheel_.vel = (r_wheel_.pos - pos_prev) / deltaSeconds;
-
+  arduino_.readBatteryValues(battery_.volt, battery_.curr)
 
 
   return return_type::OK;
