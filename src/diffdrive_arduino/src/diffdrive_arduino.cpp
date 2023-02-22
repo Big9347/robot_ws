@@ -121,7 +121,7 @@ hardware_interface::return_type DiffDriveArduino::read()
   pos_prev = r_wheel_.pos;
   r_wheel_.pos = r_wheel_.calcEncAngle();
   r_wheel_.vel = (r_wheel_.pos - pos_prev) / deltaSeconds;
-  arduino_.readBatteryValues(battery_.volt, battery_.curr)
+  arduino_.readBatteryValues(battery_.volt, battery_.curr);
 
 
   return return_type::OK;
