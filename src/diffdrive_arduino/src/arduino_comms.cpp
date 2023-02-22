@@ -34,7 +34,7 @@ void ArduinoComms::readEncoderValues(int &val_1, int &val_2)
     val_1 = std::atoi(token_1.c_str());
     val_2 = std::atoi(token_2.c_str());
 }
-void ArduinoComms::readBatteryValues(int &val_1, int &val_2)
+void ArduinoComms::readBatteryValues(double &val_1, double &val_2)
 {
     std::string response = sendMsg("f\r");
 

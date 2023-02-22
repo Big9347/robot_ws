@@ -43,7 +43,28 @@ namespace battery_state_controller
 BatteryStateController::BatteryStateController()
 {
 }
+controller_interface::return_type BatteryStateController::init(const std::string & controller_name)
+{
+  auto ret = ControllerInterface::init(controller_name);
+  if (ret != controller_interface::return_type::OK)
+  {
+    return ret;
+  }
 
+  try
+  {
+    auto_declare<std::string>("sensor_name", "");
+    auto_declare<std::string>("frame_id", "");
+  }
+  catch (const std::exception & e)
+  {
+    RCLCPP_ERROR(
+      node_->get_logger(), "Exception thrown during init stage with message: %s \n", e.what());
+    return controller_interface::return_type::ERROR;
+  }
+
+  return controller_interface::return_type::OK;
+}
 controller_interface::InterfaceConfiguration BatteryStateController::command_interface_configuration() const
 {
   return controller_interface::InterfaceConfiguration{ controller_interface::interface_configuration_type::NONE };
@@ -97,7 +118,7 @@ controller_interface::return_type BatteryStateController::update()
 {
   if (publish_rate_ > 0.0 && (node_->now() - last_publish_time_) > rclcpp::Duration(1.0 / publish_rate_, 0.0)) {
     // battery_state is the only interface of the controller
-    battery_state_msg_.data = state_interfaces_[0].get_value() * 100.0;
+    battery_state_msg_.data = state_interfaces_[0].get_value() * 24.9/1023;
 
     // publish
     battery_state_publisher_->publish(battery_state_msg_);

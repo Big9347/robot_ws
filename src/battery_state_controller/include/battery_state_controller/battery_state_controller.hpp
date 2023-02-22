@@ -17,7 +17,7 @@ class BatteryStateController : public controller_interface::ControllerInterface
 {
 public:
     BatteryStateController();
-
+    controller_interface::return_type init(const std::string & controller_name) override;
     controller_interface::InterfaceConfiguration command_interface_configuration() const override;
     controller_interface::InterfaceConfiguration state_interface_configuration() const override;
     
