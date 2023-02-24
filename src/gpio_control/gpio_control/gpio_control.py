@@ -21,8 +21,8 @@ class GpioControl(Node):
       
         self.stop_button_pin =Button(17,pull_up=False)
         self.buzzer_pin = Buzzer(1)
-        self.relay_forward = OutputDevice(4,active_high=True,initial_value=False)
-        self.relay_reverse = OutputDevice(5,active_high=True,initial_value=False)
+        self.lift_relay_forward = OutputDevice(4,active_high=True,initial_value=False)
+        self.lift_relay_reverse = OutputDevice(5,active_high=True,initial_value=False)
         self.operation_lamp_relay = OutputDevice(17,active_high=True,initial_value=False)
 
         # ROS Interactions
@@ -73,7 +73,28 @@ class GpioControl(Node):
                 res = f.result()
             else:
                 incomplete_futures.append(f)  
-    def gpio_controller():
+    def lift_up(self):
+        if(self.lift_relay_forward.value and not self.lift_relay_reverse.value):
+            self.get_logger().info("Already lifted")
+        else:
+            self.get_logger().info("lifting...")
+            self.lift_relay_forward.on()
+            self.lift_relay_reverse.off()
+    def lift_down(self):
+        if(self.lift_relay_reverse.value and not self.lift_relay_forwardvalue):
+            self.get_logger().info("Already dropped")
+        else:
+            self.get_logger().info("Dropping...")
+            self.lift_relay_reverse.on()
+            self.lift_relay_forward.off()
+    def lift_stop(self):
+        self.get_logger().info("Lift cut off...")
+        self.lift_relay_reverse.off()
+        self.lift_relay_forward.off()
+    def stanby_state(self):
+        self.lift_stop()
+        self.send_stop_motor_req()
+
     
 def main(args=None):
     
@@ -81,7 +102,7 @@ def main(args=None):
 
     gpio_control = GpioControl()
 
-    gpio_control.send_stop_motor_req()
+    gpio_control.stanby_state()
 
     # rate = face_player.create_rate(2)
     while rclpy.ok():
@@ -95,5 +116,5 @@ def main(args=None):
     rclpy.shutdown()
 
 if __name__ == '__main__':
-    #main()
-    Button(16)
+    main()
+    
