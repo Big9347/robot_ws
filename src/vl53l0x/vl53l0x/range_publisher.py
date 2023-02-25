@@ -9,10 +9,16 @@ import adafruit_vl53l0x
 class RangePublisher(Node):
     def __init__(self):
         super().__init__('range_publisher')
-        i2c = busio.I2C(board.SCL, board.SDA)
+        try:
+            i2c = busio.I2C(board.SCL, board.SDA)
+            self.sensor = adafruit_vl53l0x.VL53L0X(i2c) 
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            raise
+       
         self.publisher_ = self.create_publisher(Range, 'range_topic', 10)
         self.timer = self.create_timer(1, self.publish_range)
-        self.sensor = adafruit_vl53l0x.VL53L0X(i2c)
+        
 
         # sensor configuration
         self.sensor.start_continuous()

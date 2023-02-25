@@ -138,7 +138,7 @@ hardware_interface::return_type DiffDriveArduino::write()
   }
 
   arduino_.setMotorValues(l_wheel_.cmd / l_wheel_.rads_per_count / cfg_.loop_rate, r_wheel_.cmd / r_wheel_.rads_per_count / cfg_.loop_rate);
-
+  RCLCPP_INFO(logger_, to_string(l_wheel_.cmd / l_wheel_.rads_per_count / cfg_.loop_rate));
 
 
 

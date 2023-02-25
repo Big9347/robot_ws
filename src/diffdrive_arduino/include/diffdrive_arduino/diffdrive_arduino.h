@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include "rclcpp/rclcpp.hpp"
+#include <string>
 
 #include "hardware_interface/base_interface.hpp"
 #include "hardware_interface/system_interface.hpp"
