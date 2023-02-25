@@ -68,12 +68,12 @@ def generate_launch_description():
         parameters=[]
     )
     lidar_sensor = Node(
-        package="rplidar_ros ",
+        package="rplidar_ros",
         executable="rplidar_composition",
         parameters=[{
         'serial_port': '/dev/ttyUSB0',
         'frame_id':'laser_frame',
-        'angle_compensate':'true',
+        'angle_compensate': True,
         'scan_mode':'Standard',
         }]
     )

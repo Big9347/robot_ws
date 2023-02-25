@@ -18,8 +18,8 @@ class GpioControl(Node):
         self.motor_driver_power = Button(18,pull_up=False)
         self.stop_button =Button(17,pull_up=False)
         self.buzzer = Buzzer(1)
-        self.lift_relay_forward = OutputDevice(4,active_high=True,initial_value=False)
-        self.lift_relay_reverse = OutputDevice(5,active_high=True,initial_value=False)
+        self.lift_relay_forward = OutputDevice(5,active_high=True,initial_value=False)
+        self.lift_relay_reverse = OutputDevice(6,active_high=True,initial_value=False)
       
         # ROS Interactions
 
@@ -29,11 +29,11 @@ class GpioControl(Node):
             self.range_callback,
             10)
         self.range_sub  # prevent unused variable warning
-        self.batt_vol = self.create_subscription(
-            Float64,
-            'battery_state',
-            self.battery_callback,
-            10)
+        # self.batt_vol = self.create_subscription(
+        #     Float64,
+        #     'battery_state',
+        #     self.battery_callback,
+        #     10)
         self.lidar_motor_start = self.create_client(Empty, 'start_motor')
         if not self.lidar_motor_start.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('WARNING: start_motor service not available')
@@ -97,7 +97,7 @@ def main(args=None):
     rclpy.init(args=args)
 
     gpio_control = GpioControl()
-
+    gpio_control.lift_down()
     
 
     # rate = face_player.create_rate(2)

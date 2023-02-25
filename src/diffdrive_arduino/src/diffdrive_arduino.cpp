@@ -80,7 +80,7 @@ return_type DiffDriveArduino::start()
   arduino_.sendEmptyMsg();
   // arduino.setPidValues(9,7,0,100);
   // arduino.setPidValues(14,7,0,100);
-  arduino_.setPidValues(30, 20, 0, 100);
+  arduino_.setPidValues(9, 0, 0, 100);
 
   status_ = hardware_interface::status::STARTED;
 
