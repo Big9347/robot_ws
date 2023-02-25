@@ -15,11 +15,11 @@ class GpioControl(Node):
         self.get_logger().info('Setting up GPIO...')
 
         # Configuration
-        self.motor_driver_power = Button(18,pull_up=False)
-        self.stop_button =Button(17,pull_up=False)
-        self.buzzer = Buzzer(1)
-        self.lift_relay_forward = OutputDevice(4,active_high=True,initial_value=False)
-        self.lift_relay_reverse = OutputDevice(5,active_high=True,initial_value=False)
+        self.motor_driver_power = Button(17,pull_up=False)
+        self.stop_button =Button(16,pull_up=False)
+        self.buzzer = Buzzer(25)
+        self.lift_relay_forward = OutputDevice(5,active_high=True,initial_value=False)
+        self.lift_relay_reverse = OutputDevice(6,active_high=True,initial_value=False)
       
         # ROS Interactions
 
