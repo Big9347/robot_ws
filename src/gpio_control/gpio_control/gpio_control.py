@@ -15,16 +15,12 @@ class GpioControl(Node):
         self.get_logger().info('Setting up GPIO...')
 
         # Configuration
-        self.start_button = Button(18,pull_up=False)
-        self.bumper_right = Button(18,pull_up=False)
-        self.bumper_left = Button(18,pull_up=False)
-      
-        self.stop_button_pin =Button(17,pull_up=False)
-        self.buzzer_pin = Buzzer(1)
+        self.motor_driver_power = Button(18,pull_up=False)
+        self.stop_button =Button(17,pull_up=False)
+        self.buzzer = Buzzer(1)
         self.lift_relay_forward = OutputDevice(4,active_high=True,initial_value=False)
         self.lift_relay_reverse = OutputDevice(5,active_high=True,initial_value=False)
-        self.operation_lamp_relay = OutputDevice(17,active_high=True,initial_value=False)
-
+      
         # ROS Interactions
 
         self.range_sub = self.create_subscription(
@@ -38,28 +34,28 @@ class GpioControl(Node):
             'battery_state',
             self.battery_callback,
             10)
-        self.motor_start = self.create_client(Empty, 'start_motor')
-        if not self.motor_start.wait_for_service(timeout_sec=1.0):
+        self.lidar_motor_start = self.create_client(Empty, 'start_motor')
+        if not self.lidar_motor_start.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('WARNING: start_motor service not available')
 
-        self.motor_stop = self.create_client(Empty, 'stop_motor')
-        if not self.motor_stop.wait_for_service(timeout_sec=1.0):
+        self.lidar_motor_stop = self.create_client(Empty, 'stop_motor')
+        if not self.lidar_motor_stop.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('WARNING: stop_motor service not available')
         
-        self.motor_req = Empty.Request()
+        self.lidar_motor_req = Empty.Request()
 
         self.client_futures = []
-    def send_start_motor_req(self):
-        if self.motor_start.service_is_ready():
+    def send_start_lidar_motor_req(self):
+        if self.lidar_motor_start.service_is_ready():
             print("Starting lidar...")
-            self.client_futures.append(self.motor_start.call_async(self.motor_req))
+            self.client_futures.append(self.lidar_motor_start.call_async(self.lidar_motor_req))
         else:
             print("start_motor not ready!")
 
-    def send_stop_motor_req(self):
-        if self.motor_stop.service_is_ready():
+    def send_stop_lidar_motor_req(self):
+        if self.lidar_motor_stop.service_is_ready():
             print("Stopping lidar...")
-            self.client_futures.append(self.motor_stop.call_async(self.motor_req))
+            self.client_futures.append(self.lidar_motor_stop.call_async(self.lidar_motor_req))
         else:
             print("stop_motor not ready!")
 
@@ -93,8 +89,8 @@ class GpioControl(Node):
         self.lift_relay_forward.off()
     def stanby_state(self):
         self.lift_stop()
-        self.send_stop_motor_req()
-
+        self.send_stop_lidar_motor_req()
+        self.buzzer.on()
     
 def main(args=None):
     
@@ -102,12 +98,21 @@ def main(args=None):
 
     gpio_control = GpioControl()
 
-    gpio_control.stanby_state()
+    
 
     # rate = face_player.create_rate(2)
     while rclpy.ok():
         rclpy.spin_once(gpio_control)
         gpio_control.check_for_finished_calls()
+        if(gpio_control.motor_driver_power.is_pressed):
+            gpio_control.get_logger().info("Motor power is cut")
+            gpio_control.stanby_state()
+        elif (gpio_control.stop_button.is_pressed):
+            gpio_control.get_logger().info("Stop button is pressed")
+            gpio_control.stanby_state()
+            time.sleep(2)
+        else:
+            gpio_control.buzzer.off()
         time.sleep(0.01)
         
         

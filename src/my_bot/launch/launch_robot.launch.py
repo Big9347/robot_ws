@@ -67,6 +67,16 @@ def generate_launch_description():
         executable="vl53l0x",
         parameters=[]
     )
+    lidar_sensor = Node(
+        package="rplidar_ros ",
+        executable="rplidar_composition",
+        parameters=[{
+        'serial_port': '/dev/ttyUSB0',
+        'frame_id':'laser_frame',
+        'angle_compensate':'true',
+        'scan_mode':'Standard',
+        }]
+    )
     robot_localization_params =os.path.join(get_package_share_directory(package_name),'config','ekf.yaml')
     
     robot_localization_node = Node(
@@ -153,6 +163,7 @@ def generate_launch_description():
         imu_tools_madgwick,
         # imu_tools_tf,
         range_sensor,
+        lidar_sensor,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
