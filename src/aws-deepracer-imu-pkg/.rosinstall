@@ -1,4 +1,0 @@
-- git:
-    uri: https://github.com/larsll/aws-deepracer-imu-pkg.git
-    local-name: aws-deepracer-imu-pkg
-    version: main
