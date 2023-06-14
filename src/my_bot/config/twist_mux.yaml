@@ -6,6 +6,6 @@ twist_mux:
         timeout : 1.0
         priority: 10
       teleop_twist_keyboard:
-        topic   : cmd_vel_keyboard
-        timeout : 1.0
+        topic   : cmd_vel_key
+        timeout : 3.0
         priority: 100

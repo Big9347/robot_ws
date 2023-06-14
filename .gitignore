@@ -3,3 +3,5 @@ install/
 log/
 unused/
 src/navigation2/
+src/vl53lox/
+src/rplidar_ros2/

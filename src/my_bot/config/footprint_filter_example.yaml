@@ -1,0 +1,10 @@
+scan_to_scan_filter_chain:
+  ros__parameters:
+    use_sim_time: False
+    tf_message_filter_target_frame: laser_frame_filter
+    filter1:
+      name: footprint_filter
+      type: laser_filters/LaserScanFootprintFilter
+      params:
+        inscribed_radius: 0.4
+      

@@ -46,7 +46,8 @@ def generate_launch_description():
     # Create our own temporary YAML files that include substitutions
     param_substitutions = {
         'use_sim_time': use_sim_time,
-        'yaml_filename': map_yaml_file}
+        'yaml_filename': map_yaml_file
+        }
 
     configured_params = RewrittenYaml(
         source_file=params_file,
@@ -64,7 +65,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'map',
-            default_value=os.path.join(bringup_dir, 'maps', 'turtlebot3_world.yaml'),
+            default_value=os.path.join(bringup_dir, 'config', 'turtlebot3_world.yaml'),
             description='Full path to map yaml file to load'),
 
         DeclareLaunchArgument(
